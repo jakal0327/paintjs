@@ -7,29 +7,41 @@
  */
 
 /**
- * @param getElementById :
- * ID 특성의 지정된 값을 가진 첫 번째 개체에 대한 참조를 반환
+ * @param canvas :
+ * getElementById : ID 특성의 지정된 값을 가진 첫 번째 개체에 대한 참조를 반환
  * 컨텍스트 식별자가 지원되지 않을 경우 null을 반환.
  */
 const canvas = document.getElementById("jsCanvas");
 
 /**
- * @param getContext : 캔버스의 드로잉 컨텍스트를 반환
+ * @param ctx
+ * getContext : 캔버스의 드로잉 컨텍스트를 반환
  */
 const ctx = canvas.getContext("2d");
+/**
+ * @param colors
+ * getElementsByClassName :
+ * 컬렉션 객체를 반환 for문을 사용하거나 특정 index에 위치한 element를 반환받아 사용
+ */
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
+
 /**
  * @param INITIAL_COLOR : 검정색
  */
 const INITIAL_COLOR = "2c2c2c";
-
+/**
+ * @param CANVAS_SIZE : 캔버스사이즈 700
+ */
 const CANVAS_SIZE = 700;
 
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
 
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 ctx.strokeStyle = INITIAL_COLOR;
 ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
@@ -66,16 +78,16 @@ function onMouseMove(event) {
   //   console.log(x, y);
 }
 
-/**
- * @param onMouseUp : 마우스 클릭하고 뗼때
- */
-function onMouseUp(event) {
-  stopPainting();
-  //   painting = false;
-}
+// /**
+//  * @param onMouseUp : 마우스 클릭하고 뗼때
+//  */
+// function onMouseUp(event) {
+//   stopPainting();
+//   //   painting = false;
+// }
 
 /**
- * @param handleColorClick : 색상변경
+ * @param handleColorClick : 색상 변경
  */
 function handleColorClick(event) {
   const color = event.target.style.backgroundColor;
@@ -84,7 +96,7 @@ function handleColorClick(event) {
 }
 
 /**
- * @param handleRangeChange : ~변경
+ * @param handleRangeChange : 굵기 변경
  */
 function handleRangeChange(event) {
   const size = event.target.value;
@@ -92,7 +104,7 @@ function handleRangeChange(event) {
 }
 
 /**
- * @param handleModeClick : ~변경
+ * @param handleModeClick : 그리기모드 변경
  */
 function handleModeClick(event) {
   if (filling === true) {
@@ -104,11 +116,36 @@ function handleModeClick(event) {
     ctx.fillStyle = ctx.strokeStyle;
   }
 }
-
+/**
+ * @param handleCanvasClick : 캔버스 반응 사이즈
+ */
 function handleCanvasClick() {
   if (filling) {
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
   }
+}
+/**
+ * @param handleCM : 우클릭 방지
+ */
+function handleCM(event) {
+  event.preventDefault();
+}
+/**
+ * @param handleSaveClick : 클릭시 이미지 .png 로 저장
+ */
+function handleSaveClick(event) {
+  /**
+   * @param image : URL data 추출
+   */
+  const image = canvas.toDataURL("image/png");
+  /**
+   * @param link : 생성할 요소의 유형을 가리킴
+   */
+  const link = document.createElement("a");
+  link.href = image;
+  link.download = "PaintJs[EXPORT]";
+  link.click();
+  console.log(link);
 }
 
 /**
@@ -120,6 +157,7 @@ if (canvas) {
   canvas.addEventListener("mouseup", stopPainting);
   canvas.addEventListener("mouseleave", stopPainting);
   canvas.addEventListener("click", handleCanvasClick);
+  canvas.addEventListener("contextmenu", handleCM);
 }
 
 Array.from(colors).forEach((color) =>
@@ -131,4 +169,7 @@ if (range) {
 }
 if (mode) {
   mode.addEventListener("click", handleModeClick);
+}
+if (saveBtn) {
+  saveBtn.addEventListener("click", handleSaveClick);
 }
