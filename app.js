@@ -125,22 +125,20 @@ function handleCanvasClick() {
   }
 }
 /**
- * @param handleCM : 우클릭 방지
+ * @param handleCM
+ * preventDefault : 우클릭 방지
  */
 function handleCM(event) {
   event.preventDefault();
 }
 /**
  * @param handleSaveClick : 클릭시 이미지 .png 로 저장
+ * @param {const} image : URL data 추출
+ * @param link : 생성할 요소의 유형을 가리킴
+ * @
  */
 function handleSaveClick(event) {
-  /**
-   * @param image : URL data 추출
-   */
   const image = canvas.toDataURL("image/png");
-  /**
-   * @param link : 생성할 요소의 유형을 가리킴
-   */
   const link = document.createElement("a");
   link.href = image;
   link.download = "PaintJs[EXPORT]";
